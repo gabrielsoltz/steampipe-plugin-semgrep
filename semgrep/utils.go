@@ -10,6 +10,12 @@ import (
 
 func connect(_ context.Context, d *plugin.QueryData) (*semgrep.Client, error) {
 
+	// Load connection from cache, which preserves throttling protection etc
+	cacheKey := "semgrep"
+	if cachedData, ok := d.ConnectionManager.Cache.Get(cacheKey); ok {
+		return cachedData.(*semgrep.Client), nil
+	}
+
 	// Start with an empty Turbot config
 	tokenProvider := semgrep.BasicAuthTransport{}
 	var baseUrl, token string
