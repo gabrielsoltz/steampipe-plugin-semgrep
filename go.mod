@@ -1,4 +1,4 @@
-module github.com/turbot/steampipe-plugin-semgrep
+module github.com/gabrielsoltz/steampipe-plugin-semgrep
 
 go 1.19
 

@@ -2,6 +2,8 @@ package semgrep
 
 import (
 	"context"
+	"errors"
+	"fmt"
 
 	"github.com/turbot/steampipe-plugin-sdk/v5/grpc/proto"
 	"github.com/turbot/steampipe-plugin-sdk/v5/plugin"
