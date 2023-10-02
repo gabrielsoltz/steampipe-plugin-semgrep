@@ -1,6 +1,6 @@
 module github.com/gabrielsoltz/steampipe-plugin-semgrep
 
-go 1.19
+go 1.21
 
 require github.com/turbot/steampipe-plugin-sdk/v5 v5.6.1
 
@@ -77,7 +77,6 @@ require (
 	github.com/stevenle/topsort v0.2.0 // indirect
 	github.com/tkrajina/go-reflector v0.5.6 // indirect
 	github.com/turbot/go-kit v0.8.0-rc.0 // indirect
-	github.com/turbot/steampipe-plugin-sdk/v4 v4.1.13 // indirect
 	github.com/ulikunitz/xz v0.5.10 // indirect
 	github.com/zclconf/go-cty v1.14.0 // indirect
 	go.opencensus.io v0.24.0 // indirect
@@ -113,5 +112,3 @@ require (
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	k8s.io/apimachinery v0.25.3 // indirect
 )
-
-replace github.com/turbot/steampipe-plugin-semgrep/semgrep => ../semgrep
