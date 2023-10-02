@@ -1,5 +1,5 @@
 connection "semgrep" {
-  plugin = "semgrep"
+  plugin = "gabrielsoltz/semgrep"
 
   base_url = "https://semgrep.dev/api/v1"
 

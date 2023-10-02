@@ -6,8 +6,8 @@ import (
 )
 
 type semgrepConfig struct {
-	BaseUrl  *string `cty:"base_url"`
-	Token    *string `cty:"token"`
+	BaseUrl *string `cty:"base_url"`
+	Token   *string `cty:"token"`
 }
 
 var ConfigSchema = map[string]*schema.Attribute{
@@ -23,7 +23,6 @@ func ConfigInstance() interface{} {
 	return &semgrepConfig{}
 }
 
-// GetConfig :: retrieve and cast connection config from query data
 func GetConfig(connection *plugin.Connection) semgrepConfig {
 	if connection == nil || connection.Config == nil {
 		return semgrepConfig{}
