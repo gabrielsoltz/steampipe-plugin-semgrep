@@ -15,7 +15,7 @@ steampipe plugin install semgrep
 Run a query:
 
 ```sql
-select id, rule_message from semgrep_finding where state = 'unresolved';
+select id, state, rule_message from semgrep_findings where state = 'unresolved' and deployment_slug = 'my-company';
 ```
 
 ## Developing
