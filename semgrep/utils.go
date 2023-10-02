@@ -3,23 +3,14 @@ package semgrep
 import (
 	"context"
 	"errors"
-	"fmt"
+	"io/ioutil"
+	"net/http"
 
-	"github.com/turbot/steampipe-plugin-sdk/v5/grpc/proto"
 	"github.com/turbot/steampipe-plugin-sdk/v5/plugin"
-	"github.com/turbot/steampipe-plugin-sdk/v5/plugin/schema"
 )
 
-func connect(_ context.Context, d *plugin.QueryData) (*semgrep.Client, error) {
+func connect(ctx context.Context, d *plugin.QueryData, endpoint string) (string, error) {
 
-	// Load connection from cache, which preserves throttling protection etc
-	cacheKey := "semgrep"
-	if cachedData, ok := d.ConnectionManager.Cache.Get(cacheKey); ok {
-		return cachedData.(*semgrep.Client), nil
-	}
-
-	// Start with an empty Turbot config
-	tokenProvider := semgrep.BasicAuthTransport{}
 	var baseUrl, token string
 
 	// Prefer config options given in Steampipe
@@ -33,23 +24,39 @@ func connect(_ context.Context, d *plugin.QueryData) (*semgrep.Client, error) {
 	}
 
 	if baseUrl == "" {
-		return nil, errors.New("'base_url' must be set in the connection configuration. Edit your connection configuration file and then restart Steampipe")
+		return "", errors.New("'baseUrl' must be set in the connection configuration. Edit your connection configuration file and then restart Steampipe")
 	}
 
 	if token == "" {
-		return nil, errors.New("'token' must be set in the connection configuration. Edit your connection configuration file and then restart Steampipe")
+		return "", errors.New("'token' must be set in the connection configuration. Edit your connection configuration file and then restart Steampipe")
 	}
-	tokenProvider.Password = token
 
-	// Create the client
-	client, err := semgrep.NewClient(tokenProvider.Client(), baseUrl)
+	// Create a new request
+	req, err := http.NewRequest("GET", baseUrl+endpoint, nil)
 	if err != nil {
-		return nil, fmt.Errorf("error creating Semgrep client: %s", err.Error())
+		plugin.Logger(ctx).Error("Failed to create request: %v", err)
+		return "", err
 	}
 
-	// Save to cache
-	d.ConnectionManager.Cache.Set(cacheKey, client)
+	// Add the Bearer token to the request header
+	req.Header.Add("Authorization", "Bearer "+token)
+	req.Header.Add("Accept", "application/json")
 
-	// Done
-	return client, nil
+	// Make the request
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		plugin.Logger(ctx).Error("Failed to make request: %v", err)
+		return "", err
+	}
+	defer resp.Body.Close()
+
+	// Read and print the response body
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		plugin.Logger(ctx).Error("Failed to read response body: %v", err)
+		return "", err
+	}
+
+	return string(body), nil
 }

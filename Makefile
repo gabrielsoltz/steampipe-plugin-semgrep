@@ -9,5 +9,4 @@ ifeq ($(OS),Darwin)
 endif
 
 install:
-	go build -o ~/.steampipe/plugins/hub.steampipe.io/plugins/turbot/semgrep@latest/steampipe-plugin-semgrep.plugin *.go
-
+	go build -o ~/.steampipe/plugins/hub.steampipe.io/plugins/gabrielsoltz/semgrep@latest/steampipe-plugin-semgrep.plugin *.go
