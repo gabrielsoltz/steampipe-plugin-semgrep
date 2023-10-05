@@ -23,6 +23,7 @@ func tableProjects(_ context.Context) *plugin.Table {
 			{Name: "name", Type: proto.ColumnType_STRING},
 			{Name: "url", Type: proto.ColumnType_STRING},
 			{Name: "latest_scan", Type: proto.ColumnType_TIMESTAMP},
+			{Name: "tags", Type: proto.ColumnType_JSON},
 			{Name: "deployment_slug", Type: proto.ColumnType_STRING, Transform: transform.FromQual("deployment_slug")},
 		},
 	}
@@ -59,10 +60,11 @@ func listProjects(ctx context.Context, d *plugin.QueryData, _ *plugin.HydrateDat
 //// Custom Structs
 
 type Project struct {
-	ID         int    `json:"id"`
-	Name       string `json:"name"`
-	Url        string `json:"url"`
-	LatestScan string `json:"latest_scan_at"`
+	ID         int      `json:"id"`
+	Name       string   `json:"name"`
+	Url        string   `json:"url"`
+	LatestScan string   `json:"latest_scan_at"`
+	Tags       []string `json:"tags"`
 }
 
 type ProjectsResponse struct {
