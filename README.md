@@ -2,14 +2,15 @@
 
 Use SQL to query your security findings from Semgrep.
 
-- Documentation: [Table definitions & examples](docs/index.md)
+- **[Get started →](docs/index.md)**
+- Documentation: [Table definitions & examples](docs/tables)
 
 ## Quick start
 
 Install the plugin with [Steampipe](https://steampipe.io):
 
 ```shell
-steampipe plugin install semgrep
+steampipe plugin install gabrielsoltz/semgrep
 ```
 
 Run a query:
@@ -18,7 +19,7 @@ Run a query:
 select id, state, rule_message from semgrep_findings where state = 'unresolved' and deployment_slug = 'my-company';
 ```
 
-## Developing
+## Development
 
 Prerequisites:
 

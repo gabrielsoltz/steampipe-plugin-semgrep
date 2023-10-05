@@ -5,6 +5,7 @@ import (
 	"errors"
 	"io/ioutil"
 	"net/http"
+	"os"
 
 	"github.com/turbot/steampipe-plugin-sdk/v5/plugin"
 )
@@ -16,9 +17,12 @@ func connect(ctx context.Context, d *plugin.QueryData, endpoint string) (string,
 	// Prefer config options given in Steampipe
 	semgrepConfig := GetConfig(d.Connection)
 
+	baseUrl = os.Getenv("SEMGREP_URL")
 	if semgrepConfig.BaseUrl != nil {
 		baseUrl = *semgrepConfig.BaseUrl
 	}
+
+	token = os.Getenv("SEMGREP_TOKEN")
 	if semgrepConfig.Token != nil {
 		token = *semgrepConfig.Token
 	}

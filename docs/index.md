@@ -3,7 +3,7 @@ organization: gabrielsoltz
 category: ["security"]
 icon_url: "/images/plugins/gabrielsoltz/semgrep.svg"
 brand_color: "#0095E5"
-display_name: "semgrep"
+display_name: "Semgrep"
 short_name: "semgrep"
 description: "Steampipe plugin to query Semgrep"
 og_description: "Query Semgrep with SQL! Open source CLI. No DB required."
@@ -69,7 +69,7 @@ where
 Download and install the latest Semgrep plugin:
 
 ```bash
-steampipe plugin install semgrep
+steampipe plugin install gabrielsoltz/semgrep
 ```
 
 ### Configuration
@@ -88,6 +88,8 @@ connection "semgrep" {
 ```
 
 - `token` - Required access token from Semgrep
+
+You can also set the configuration via the environment variables `SEMGREP_URL` and `SEMGREP_TOKEN`.
 
 ## Get involved
 
