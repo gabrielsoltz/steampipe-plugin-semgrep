@@ -37,5 +37,5 @@ from
 where
   deployment_slug = 'my-deployment'
   and severity = 'high'
-  and triage_state = 'not_triaged';
+  and triage_state = 'untriaged';
 ```
