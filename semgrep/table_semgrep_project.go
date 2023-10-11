@@ -13,18 +13,19 @@ import (
 
 func tableProjects(_ context.Context) *plugin.Table {
 	return &plugin.Table{
-		Name: "semgrep_projects",
+		Name:        "semgrep_project",
+		Description: "Table for querying Semgrep projects, containing project-specific information and configurations.",
 		List: &plugin.ListConfig{
 			Hydrate:    listProjects,
 			KeyColumns: plugin.SingleColumn("deployment_slug"),
 		},
 		Columns: []*plugin.Column{
-			{Name: "id", Type: proto.ColumnType_STRING},
-			{Name: "name", Type: proto.ColumnType_STRING},
-			{Name: "url", Type: proto.ColumnType_STRING},
-			{Name: "latest_scan", Type: proto.ColumnType_TIMESTAMP},
-			{Name: "tags", Type: proto.ColumnType_JSON},
-			{Name: "deployment_slug", Type: proto.ColumnType_STRING, Transform: transform.FromQual("deployment_slug")},
+			{Name: "id", Type: proto.ColumnType_STRING, Description: "Unique ID of this project."},
+			{Name: "name", Type: proto.ColumnType_STRING, Description: "Name of this project."},
+			{Name: "url", Type: proto.ColumnType_STRING, Description: "URL of this project."},
+			{Name: "latest_scan", Type: proto.ColumnType_TIMESTAMP, Description: "Latest scan date of this project."},
+			{Name: "tags", Type: proto.ColumnType_JSON, Description: "Tags of this project."},
+			{Name: "deployment_slug", Type: proto.ColumnType_STRING, Transform: transform.FromQual("deployment_slug"), Description: "Sanitized machine-readable name of the deployment."},
 		},
 	}
 }
@@ -33,7 +34,7 @@ func tableProjects(_ context.Context) *plugin.Table {
 
 func listProjects(ctx context.Context, d *plugin.QueryData, _ *plugin.HydrateData) (interface{}, error) {
 
-	deployment_slug := d.EqualsQuals["deployment_slug"].GetStringValue()
+	deployment_slug := d.EqualsQualString("deployment_slug")
 
 	endpoint := "/deployments/" + deployment_slug + "/projects"
 
