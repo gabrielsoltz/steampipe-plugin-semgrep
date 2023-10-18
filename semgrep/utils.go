@@ -3,6 +3,7 @@ package semgrep
 import (
 	"context"
 	"errors"
+	"fmt"
 	"io/ioutil"
 	"net/http"
 	"os"
@@ -10,8 +11,7 @@ import (
 	"github.com/turbot/steampipe-plugin-sdk/v5/plugin"
 )
 
-func connect(ctx context.Context, d *plugin.QueryData, endpoint string) (string, error) {
-
+func connect(ctx context.Context, d *plugin.QueryData, endpoint string, page int, pageSize int) (string, error) {
 	var baseUrl, token string
 
 	// Prefer config options given in Steampipe
@@ -35,6 +35,9 @@ func connect(ctx context.Context, d *plugin.QueryData, endpoint string) (string,
 		return "", errors.New("'token' must be set in the connection configuration. Edit your connection configuration file and then restart Steampipe")
 	}
 
+	// Create a new HTTP client
+	client := &http.Client{}
+
 	// Create a new request
 	req, err := http.NewRequest("GET", baseUrl+endpoint, nil)
 	if err != nil {
@@ -46,8 +49,13 @@ func connect(ctx context.Context, d *plugin.QueryData, endpoint string) (string,
 	req.Header.Add("Authorization", "Bearer "+token)
 	req.Header.Add("Accept", "application/json")
 
+	// Set query parameters for pagination
+	queryParams := req.URL.Query()
+	queryParams.Set("page", fmt.Sprintf("%d", page))
+	queryParams.Set("page_size", fmt.Sprintf("%d", pageSize))
+	req.URL.RawQuery = queryParams.Encode()
+
 	// Make the request
-	client := &http.Client{}
 	resp, err := client.Do(req)
 	if err != nil {
 		plugin.Logger(ctx).Error("Failed to make request: %v", err)
@@ -63,4 +71,5 @@ func connect(ctx context.Context, d *plugin.QueryData, endpoint string) (string,
 	}
 
 	return string(body), nil
+
 }

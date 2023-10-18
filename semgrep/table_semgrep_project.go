@@ -38,7 +38,9 @@ func listProjects(ctx context.Context, d *plugin.QueryData, _ *plugin.HydrateDat
 
 	endpoint := "/deployments/" + deployment_slug + "/projects"
 
-	jsonString, err := connect(ctx, d, endpoint)
+	page := 0
+	pageSize := 150
+	jsonString, err := connect(ctx, d, endpoint, page, pageSize)
 
 	if err != nil {
 		plugin.Logger(ctx).Error("semgrep_projects.listProjects", "connection_error", err)
