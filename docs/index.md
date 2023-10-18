@@ -5,7 +5,7 @@ icon_url: "/images/plugins/gabrielsoltz/semgrep.svg"
 brand_color: "#0095E5"
 display_name: "Semgrep"
 short_name: "semgrep"
-description: "Steampipe plugin to query Semgrep"
+description: "Steampipe plugin to query deployments, findings, and projects from Semgrep"
 og_description: "Query Semgrep with SQL! Open source CLI. No DB required."
 og_image: "/images/plugins/gabrielsoltz/semgrep-social-graphic.png"
 ---
@@ -20,14 +20,14 @@ Query your security findings and filter by state:
 
 ```sql
 select
-  id,
-  state,
-  rule_message
+   id,
+   state,
+   rule_message
 from
-  semgrep_findings
+   semgrep_finding
 where
-  deployment_slug = 'my-company' and
-  state = 'unresolved';
+   deployment_slug = 'my-company'
+   and state = 'unresolved';
 ```
 
 ```
@@ -39,28 +39,9 @@ where
 | 2301 | unresolved | An action sourced from a third-party repository on GitHub is not pinned to a full length commit SHA. Pinning an action to a full length commit SHA is currently the only way to use an action>
 ```
 
-Query your Semgrep projects:
-
-```sql
-select
-  id,
-  name
-from
-  semgrep_projects
-where
-  deployment_slug = 'my-company';
-```
-
-```
-+--------+----------------------------------------+
-| id     | name                                   |
-+--------+----------------------------------------+
-| 261867 | gabrielsoltz/steampipe-plugin-semgrep  |
-```
-
 ## Documentation
 
-- **[Table definitions & examples](tables/index.md)**
+**[Table definitions & examples →](/plugins/gabrielsoltz/semgrep/tables)**
 
 ## Get started
 
@@ -80,16 +61,24 @@ Installing the latest Semgrep plugin will create a config file (`~/.steampipe/co
 connection "semgrep" {
   plugin = "gabrielsoltz/semgrep"
 
+  # The base URL of Semgrep. Required.
+  # This can be set via the `SEMGREP_URL` environment variable.
   base_url = "https://semgrep.dev/api/v1"
 
-  # Access Token for which to use for the API
-  token = ""
+  # The access token required for API calls. Required.
+  # This can also be set via the `SEMGREP_TOKEN` environment variable.
+  # token = "45f86adc2nv54efd76151530rr629fc8953c2a111111fd74fa7d361d70e55759"
 }
 ```
 
 - `token` - Required access token from Semgrep
 
-You can also set the configuration via the environment variables `SEMGREP_URL` and `SEMGREP_TOKEN`.
+Alternatively, you can also use the standard Semgrep environment variables to obtain credentials only if other arguments (base_urland token) are not specified in the connection:
+
+```
+export SEMGREP_URL=https://semgrep.dev/api/v1
+export SEMGREP_TOKEN=45f86adc2nv54efd76151530rr629fc8953c2a111111fd74fa7d361d70e55759
+```
 
 ## Get involved
 

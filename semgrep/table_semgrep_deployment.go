@@ -12,14 +12,16 @@ import (
 
 func tableDeployments(_ context.Context) *plugin.Table {
 	return &plugin.Table{
-		Name: "semgrep_deployments",
+		Name:        "semgrep_deployment",
+		Description: "Table for queriying Semgrep deployment details, including name and id.",
 		List: &plugin.ListConfig{
 			Hydrate: listDeployments,
 		},
 		Columns: []*plugin.Column{
-			{Name: "id", Type: proto.ColumnType_STRING},
-			{Name: "name", Type: proto.ColumnType_STRING},
-			{Name: "slug", Type: proto.ColumnType_STRING},
+			{Name: "id", Type: proto.ColumnType_STRING, Description: "Unique numerical identifier of the deployment."},
+			{Name: "name", Type: proto.ColumnType_STRING, Description: "Human readable name of the deployment."},
+			{Name: "slug", Type: proto.ColumnType_STRING, Description: "Sanitized machine-readable name of the deployment."},
+			{Name: "findings_url", Type: proto.ColumnType_STRING, Description: "URL to the findings for the deployment."},
 		},
 	}
 }

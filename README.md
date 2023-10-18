@@ -1,9 +1,11 @@
 # Semgrep Plugin for Steampipe
 
-Use SQL to query your security findings from Semgrep.
+Use SQL to query your security findings from [Semgrep](https://semgrep.dev/)
 
-- **[Get started →](docs/index.md)**
-- Documentation: [Table definitions & examples](docs/tables)
+- **[Get started →](https://hub.steampipe.io/plugins/gabrielsoltz/semgrep)**
+- Documentation: [Table definitions & examples](https://hub.steampipe.io/plugins/gabrielsoltz/semgrep/tables)
+- Community: [Slack Channel](https://steampipe.io/community/join)
+- Get involved: [Issues](https://github.com/gabrielsoltz/steampipe-plugin-semgrep/issues)
 
 ## Quick start
 
@@ -13,10 +15,50 @@ Install the plugin with [Steampipe](https://steampipe.io):
 steampipe plugin install gabrielsoltz/semgrep
 ```
 
+Configure the api token in `~/.steampipe/config/semgrep.spc`:
+
+```hcl
+connection "semgrep" {
+  plugin = "gabrielsoltz/semgrep"
+
+  # The base URL of Semgrep. Required.
+  # This can be set via the `SEMGREP_URL` environment variable.
+  base_url = "https://semgrep.dev/api/v1"
+
+  # The access token required for API calls. Required.
+  # This can also be set via the `SEMGREP_TOKEN` environment variable.
+  # token = "45f86adc2nv54efd76151530rr629fc8953c2a111111fd74fa7d361d70e55759"
+}
+```
+
+Or through environment variables:
+
+```shell
+export SEMGREP_URL=https://semgrep.dev/api/v1
+export SEMGREP_TOKEN=45f86adc2nv54efd76151530rr629fc8953c2a111111fd74fa7d361d70e55759
+```
+
 Run a query:
 
 ```sql
-select id, state, rule_message from semgrep_findings where state = 'unresolved' and deployment_slug = 'my-company';
+select
+  id,
+  state,
+  rule_message
+from
+  semgrep_findings
+where
+  state = 'unresolved'
+  and deployment_slug = 'my-company';
+```
+
+```
++----------+------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------->
+| id       | state      | rule_message                                                                                                                                                                                 >
++----------+------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------->
+| 0123 | unresolved | Avoiding SQL string concatenation: untrusted input concatenated with raw SQL query can result in SQL Injection. In order to execute raw query safely, prepared statement should be used. SQLA>
+| 1230 | unresolved | Exposing host's Docker socket to containers via a volume. The owner of this socket is root. Giving someone access to it is equivalent to giving unrestricted root access to your host. Remove>
+| 2301 | unresolved | An action sourced from a third-party repository on GitHub is not pinned to a full length commit SHA. Pinning an action to a full length commit SHA is currently the only way to use an action>
 ```
 
 ## Development
@@ -61,3 +103,8 @@ Further reading:
 ## Contributing
 
 Please see the [contribution guidelines](https://github.com/turbot/steampipe/blob/main/CONTRIBUTING.md) and our [code of conduct](https://github.com/turbot/steampipe/blob/main/CODE_OF_CONDUCT.md). All contributions are subject to the [Apache 2.0 open source license](https://github.com/gabrielsoltz/steampipe-plugin-semgrep/blob/main/LICENSE).
+
+`help wanted` issues:
+
+- [Steampipe](https://github.com/turbot/steampipe/labels/help%20wanted)
+- [semgrep Plugin](https://github.com/gabrielsoltz/steampipe-plugin-semgrep/labels/help%20wanted)
