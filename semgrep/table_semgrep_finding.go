@@ -52,24 +52,26 @@ func listFindings(ctx context.Context, d *plugin.QueryData, _ *plugin.HydrateDat
 
 	endpoint := "/deployments/" + deployment_slug + "/findings"
 
-	jsonString, err := connect(ctx, d, endpoint)
+	paginatedResponse, err := paginatedResponse(ctx, d, endpoint)
 
 	if err != nil {
-		plugin.Logger(ctx).Error("semgrep_findings.listFindings", "connection_error", err)
+		plugin.Logger(ctx).Error("semgrep_projects.listFindings", "connection_error", err)
 		return nil, err
 	}
 
-	var response FindingsResponse
-	err = json.Unmarshal([]byte(jsonString), &response)
-	if err != nil {
-		plugin.Logger(ctx).Error("semgrep_findings.listFindings", "failed_unmarshal", err)
+	for _, split_response := range paginatedResponse {
+		var response FindingsResponse
+		err = json.Unmarshal([]byte(split_response), &response)
+		if err != nil {
+			plugin.Logger(ctx).Error("semgrep_projects.listFindings", "failed_unmarshal", err)
+		}
+
+		for _, finding := range response.Findings {
+			d.StreamListItem(ctx, finding)
+		}
 	}
 
-	for _, finding := range response.Findings {
-		d.StreamListItem(ctx, finding)
-	}
-
-	return response, nil
+	return paginatedResponse, nil
 }
 
 //// Custom Structs
