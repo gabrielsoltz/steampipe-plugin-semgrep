@@ -73,3 +73,29 @@ func connect(ctx context.Context, d *plugin.QueryData, endpoint string, page int
 	return string(body), nil
 
 }
+
+func paginatedResponse(ctx context.Context, d *plugin.QueryData, endpoint string) ([]string, error) {
+	var paginatedResponse []string
+
+	page := 0
+	pageSize := 100
+
+	// Iteration for Pagination
+	for {
+		jsonString, err := connect(ctx, d, endpoint, page, pageSize)
+		if err != nil {
+			plugin.Logger(ctx).Error("utils.paginatedResponse", "connection_error", err)
+			return nil, err
+		}
+
+		paginatedResponse = append(paginatedResponse, jsonString)
+
+		if len(jsonString) < pageSize {
+			break
+		}
+		page++
+
+	}
+
+	return paginatedResponse, nil
+}

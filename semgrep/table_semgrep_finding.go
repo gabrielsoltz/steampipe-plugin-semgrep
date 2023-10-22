@@ -52,43 +52,26 @@ func listFindings(ctx context.Context, d *plugin.QueryData, _ *plugin.HydrateDat
 
 	endpoint := "/deployments/" + deployment_slug + "/findings"
 
-	var combinedResponse []FindingsResponse
+	paginatedResponse, err := paginatedResponse(ctx, d, endpoint)
 
-	// Pagination
-	page := 0
-	pageSize := 115
-	for {
-
-		var response FindingsResponse
-
-		jsonString, err := connect(ctx, d, endpoint, page, pageSize)
-		if err != nil {
-			plugin.Logger(ctx).Error("semgrep_findings.listFindings", "connection_error", err)
-			return nil, err
-		}
-
-		err = json.Unmarshal([]byte(jsonString), &response)
-		if err != nil {
-			plugin.Logger(ctx).Error("semgrep_findings.listFindings", "failed_unmarshal", err)
-		}
-
-		combinedResponse = append(combinedResponse, response)
-
-		if len(response.Findings) < pageSize {
-			break
-		}
-
-		page++
-
+	if err != nil {
+		plugin.Logger(ctx).Error("semgrep_projects.listFindings", "connection_error", err)
+		return nil, err
 	}
 
-	for _, response := range combinedResponse {
+	for _, split_response := range paginatedResponse {
+		var response FindingsResponse
+		err = json.Unmarshal([]byte(split_response), &response)
+		if err != nil {
+			plugin.Logger(ctx).Error("semgrep_projects.listFindings", "failed_unmarshal", err)
+		}
+
 		for _, finding := range response.Findings {
 			d.StreamListItem(ctx, finding)
 		}
 	}
 
-	return combinedResponse, nil
+	return paginatedResponse, nil
 }
 
 //// Custom Structs
