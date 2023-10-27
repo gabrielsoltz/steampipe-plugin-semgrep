@@ -63,6 +63,12 @@ func connect(ctx context.Context, d *plugin.QueryData, endpoint string, page int
 	}
 	defer resp.Body.Close()
 
+	// Check the response status code
+	if resp.StatusCode != 200 {
+		plugin.Logger(ctx).Error("utils.connect", "status_code_error", resp.Status)
+		return "", fmt.Errorf("API returned HTTP status %s", resp.Status)
+	}
+
 	// Read and print the response body
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
