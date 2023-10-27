@@ -8,35 +8,35 @@ A Semgrep project is a focused and organized endeavor undertaken by a developmen
 
 ```sql
 select
-   id,
-   name,
-   latest_scan
+  id,
+  name,
+  latest_scan
 from
-   semgrep_project
+  semgrep_project
 where
-   deployment_slug = 'my-deployment';
+  deployment_slug = 'my-deployment';
 ```
 
 ### List all Semgrep projects with contains the tag `security`
 
 ```sql
-SELECT
-   *
-FROM
-   semgrep_project
-WHERE
-   tags ? 'security'
-   and deployment_slug = 'my-deployment'
+select
+  *
+from
+  semgrep_project
+where
+  tags ? 'security'
+  and deployment_slug = 'my-deployment'
 ```
 
 ### List all Semgrep projects with a scan in the last 7 days
 
 ```sql
-SELECT
-   *
-FROM
-   semgrep_project
-WHERE
-   latest_scan > now() - interval '7 days'
-   and deployment_slug = 'my-deployment'
+select
+  *
+from
+  semgrep_project
+where
+  latest_scan > now() - interval '7 days'
+  and deployment_slug = 'my-deployment'
 ```

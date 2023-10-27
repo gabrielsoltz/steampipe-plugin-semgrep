@@ -4,7 +4,7 @@ Use SQL to query your security findings from [Semgrep](https://semgrep.dev/)
 
 - **[Get started →](https://hub.steampipe.io/plugins/gabrielsoltz/semgrep)**
 - Documentation: [Table definitions & examples](https://hub.steampipe.io/plugins/gabrielsoltz/semgrep/tables)
-- Community: [Slack Channel](https://steampipe.io/community/join)
+- Community: [Join #steampipe on Slack →](https://turbot.com/community/join)
 - Get involved: [Issues](https://github.com/gabrielsoltz/steampipe-plugin-semgrep/issues)
 
 ## Quick start
@@ -15,7 +15,7 @@ Install the plugin with [Steampipe](https://steampipe.io):
 steampipe plugin install gabrielsoltz/semgrep
 ```
 
-Configure the api token in `~/.steampipe/config/semgrep.spc`:
+Configure the API token in `~/.steampipe/config/semgrep.spc`:
 
 ```hcl
 connection "semgrep" {
@@ -42,23 +42,25 @@ Run a query:
 
 ```sql
 select
-  id,
+  triage_state,
+  severity,
   state,
-  rule_message
+  rule_message,
+  repository ->> 'name' as repo_name
 from
-  semgrep_findings
+  semgrep_finding
 where
-  state = 'unresolved'
-  and deployment_slug = 'my-company';
+  deployment_slug = 'my-company'
+  and state = 'unresolved';
 ```
 
 ```
-+----------+------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------->
-| id       | state      | rule_message                                                                                                                                                                                 >
-+----------+------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------->
-| 0123 | unresolved | Avoiding SQL string concatenation: untrusted input concatenated with raw SQL query can result in SQL Injection. In order to execute raw query safely, prepared statement should be used. SQLA>
-| 1230 | unresolved | Exposing host's Docker socket to containers via a volume. The owner of this socket is root. Giving someone access to it is equivalent to giving unrestricted root access to your host. Remove>
-| 2301 | unresolved | An action sourced from a third-party repository on GitHub is not pinned to a full length commit SHA. Pinning an action to a full length commit SHA is currently the only way to use an action>
++--------------+----------+------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+----------------------------------------+
+| triage_state | severity | state      | rule_message                                                                                                                                                                                                                              | repo_name                              |
++--------------+----------+------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+----------------------------------------+
+| untriaged    | medium   | unresolved | Detected possible formatted SQL query. Use parameterized queries instead.                                                                                                                                                                 | gabrielsoltz/steampipe-plugin-semgrep |
+| untriaged    | medium   | unresolved | Service 'localstack' allows for privilege escalation via setuid or setgid binaries. Add 'no-new-privileges:true' in 'security_opt' to prevent this.                                                                                       | gabrielsoltz/steampipe-plugin-semgrep |
++--------------+----------+------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+----------------------------------------+
 ```
 
 ## Development

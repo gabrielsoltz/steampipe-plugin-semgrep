@@ -16,9 +16,9 @@ func Plugin(ctx context.Context) *plugin.Plugin {
 			Schema:      ConfigSchema,
 		},
 		TableMap: map[string]*plugin.Table{
-			"semgrep_deployment": tableDeployments(ctx),
-			"semgrep_project":    tableProjects(ctx),
-			"semgrep_finding":    tableFindings(ctx),
+			"semgrep_deployment": tableDeployment(ctx),
+			"semgrep_finding":    tableFinding(ctx),
+			"semgrep_project":    tableProject(ctx),
 		},
 	}
 	return p

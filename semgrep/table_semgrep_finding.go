@@ -11,7 +11,7 @@ import (
 
 //// TABLE DEFINITION
 
-func tableFindings(_ context.Context) *plugin.Table {
+func tableFinding(_ context.Context) *plugin.Table {
 	return &plugin.Table{
 		Name:        "semgrep_finding",
 		Description: "Table for querying Semgrep findings data, including issues and metadata.",
@@ -32,7 +32,7 @@ func tableFindings(_ context.Context) *plugin.Table {
 			{Name: "confidence", Type: proto.ColumnType_STRING, Description: "Confidence of the rule that triggered the finding."},
 			{Name: "categories", Type: proto.ColumnType_JSON, Description: "The categories of the finding as classified by the associated rule metdata."},
 			{Name: "relevant_since", Type: proto.ColumnType_TIMESTAMP, Description: "Relevant since."},
-			{Name: "rule_name", Type: proto.ColumnType_STRING, Description: "Rule name of rule triggering.."},
+			{Name: "rule_name", Type: proto.ColumnType_STRING, Description: "Rule name of rule triggering."},
 			{Name: "rule_message", Type: proto.ColumnType_STRING, Description: "Rule message on the time of rule triggering. Older findings might have the value missing/removed."},
 			{Name: "location", Type: proto.ColumnType_JSON, Description: "Location of the record in a file, as reported by Semgrep. If null, then the information does not exist or lacks integrity (older or broken scans)."},
 			{Name: "sourcing_policy", Type: proto.ColumnType_JSON, Description: "Reference to a policy, with some basic information. If null, then the information does not exist or lacks integrity (older or broken scans)."},
@@ -55,7 +55,7 @@ func listFindings(ctx context.Context, d *plugin.QueryData, _ *plugin.HydrateDat
 	paginatedResponse, err := paginatedResponse(ctx, d, endpoint)
 
 	if err != nil {
-		plugin.Logger(ctx).Error("semgrep_projects.listFindings", "connection_error", err)
+		plugin.Logger(ctx).Error("semgrep_finding.listFindings", "connection_error", err)
 		return nil, err
 	}
 
@@ -63,7 +63,7 @@ func listFindings(ctx context.Context, d *plugin.QueryData, _ *plugin.HydrateDat
 		var response FindingsResponse
 		err = json.Unmarshal([]byte(split_response), &response)
 		if err != nil {
-			plugin.Logger(ctx).Error("semgrep_projects.listFindings", "failed_unmarshal", err)
+			plugin.Logger(ctx).Error("semgrep_finding.listFindings", "failed_unmarshal", err)
 		}
 
 		for _, finding := range response.Findings {

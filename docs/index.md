@@ -5,7 +5,7 @@ icon_url: "/images/plugins/gabrielsoltz/semgrep.svg"
 brand_color: "#0095E5"
 display_name: "Semgrep"
 short_name: "semgrep"
-description: "Steampipe plugin to query deployments, findings, and projects from Semgrep"
+description: "Steampipe plugin to query deployments, findings, and projects from Semgrep."
 og_description: "Query Semgrep with SQL! Open source CLI. No DB required."
 og_image: "/images/plugins/gabrielsoltz/semgrep-social-graphic.png"
 ---
@@ -20,23 +20,25 @@ Query your security findings and filter by state:
 
 ```sql
 select
-   id,
-   state,
-   rule_message
+  triage_state,
+  severity,
+  state,
+  rule_message,
+  repository ->> 'name' as repo_name
 from
-   semgrep_finding
+  semgrep_finding
 where
-   deployment_slug = 'my-company'
-   and state = 'unresolved';
+  deployment_slug = 'my-company'
+  and state = 'unresolved';
 ```
 
 ```
-+----------+------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------->
-| id       | state      | rule_message                                                                                                                                                                                 >
-+----------+------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------->
-| 0123 | unresolved | Avoiding SQL string concatenation: untrusted input concatenated with raw SQL query can result in SQL Injection. In order to execute raw query safely, prepared statement should be used. SQLA>
-| 1230 | unresolved | Exposing host's Docker socket to containers via a volume. The owner of this socket is root. Giving someone access to it is equivalent to giving unrestricted root access to your host. Remove>
-| 2301 | unresolved | An action sourced from a third-party repository on GitHub is not pinned to a full length commit SHA. Pinning an action to a full length commit SHA is currently the only way to use an action>
++--------------+----------+------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+----------------------------------------+
+| triage_state | severity | state      | rule_message                                                                                                                                                                                                                              | repo_name                              |
++--------------+----------+------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+----------------------------------------+
+| untriaged    | medium   | unresolved | Detected possible formatted SQL query. Use parameterized queries instead.                                                                                                                                                                 | gabrielsoltz/steampipe-plugin-semgrep |
+| untriaged    | medium   | unresolved | Service 'localstack' allows for privilege escalation via setuid or setgid binaries. Add 'no-new-privileges:true' in 'security_opt' to prevent this.                                                                                       | gabrielsoltz/steampipe-plugin-semgrep |
++--------------+----------+------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+----------------------------------------+
 ```
 
 ## Documentation
@@ -63,7 +65,7 @@ connection "semgrep" {
 
   # The base URL of Semgrep. Required.
   # This can be set via the `SEMGREP_URL` environment variable.
-  base_url = "https://semgrep.dev/api/v1"
+  # base_url = "https://semgrep.dev/api/v1"
 
   # The access token required for API calls. Required.
   # This can also be set via the `SEMGREP_TOKEN` environment variable.
