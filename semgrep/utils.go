@@ -4,7 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"os"
 
@@ -70,7 +70,7 @@ func connect(ctx context.Context, d *plugin.QueryData, endpoint string, page int
 	}
 
 	// Read and print the response body
-	body, err := ioutil.ReadAll(resp.Body)
+	body, err := io.ReadAll(resp.Body)
 	if err != nil {
 		plugin.Logger(ctx).Error("Failed to read response body: %v", err)
 		return "", err
