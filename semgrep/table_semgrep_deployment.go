@@ -10,7 +10,7 @@ import (
 
 //// TABLE DEFINITION
 
-func tableDeployments(_ context.Context) *plugin.Table {
+func tableDeployment(_ context.Context) *plugin.Table {
 	return &plugin.Table{
 		Name:        "semgrep_deployment",
 		Description: "Table for queriying Semgrep deployment details, including name and id.",
@@ -33,14 +33,14 @@ func listDeployments(ctx context.Context, d *plugin.QueryData, _ *plugin.Hydrate
 
 	jsonString, err := connect(ctx, d, endpoint, 0, 100)
 	if err != nil {
-		plugin.Logger(ctx).Error("semgrep_deployments.listDeployments", "connection_error", err)
+		plugin.Logger(ctx).Error("semgrep_deployment.listDeployments", "connection_error", err)
 		return nil, err
 	}
 
 	var response DeploymentResponse
 	err = json.Unmarshal([]byte(jsonString), &response)
 	if err != nil {
-		plugin.Logger(ctx).Error("semgrep_deployments.listDeployments", "failed_unmarshal", err)
+		plugin.Logger(ctx).Error("semgrep_deployment.listDeployments", "failed_unmarshal", err)
 	}
 
 	for _, deployment := range response.Deployments {

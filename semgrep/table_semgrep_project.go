@@ -11,7 +11,7 @@ import (
 
 //// TABLE DEFINITION
 
-func tableProjects(_ context.Context) *plugin.Table {
+func tableProject(_ context.Context) *plugin.Table {
 	return &plugin.Table{
 		Name:        "semgrep_project",
 		Description: "Table for querying Semgrep projects, containing project-specific information and configurations.",
@@ -41,7 +41,7 @@ func listProjects(ctx context.Context, d *plugin.QueryData, _ *plugin.HydrateDat
 	paginatedResponse, err := paginatedResponse(ctx, d, endpoint)
 
 	if err != nil {
-		plugin.Logger(ctx).Error("semgrep_projects.listProjects", "connection_error", err)
+		plugin.Logger(ctx).Error("semgrep_project.listProjects", "connection_error", err)
 		return nil, err
 	}
 
@@ -49,7 +49,7 @@ func listProjects(ctx context.Context, d *plugin.QueryData, _ *plugin.HydrateDat
 		var response ProjectsResponse
 		err = json.Unmarshal([]byte(split_response), &response)
 		if err != nil {
-			plugin.Logger(ctx).Error("semgrep_projects.listProjects", "failed_unmarshal", err)
+			plugin.Logger(ctx).Error("semgrep_project.listProjects", "failed_unmarshal", err)
 		}
 
 		for _, project := range response.Projects {

@@ -8,20 +8,20 @@ Semgrep deployments refer to the process of implementing and using the Semgrep t
 
 ```sql
 select
-   id,
-   name,
-   slug
+  id,
+  name,
+  slug
 from
-   semgrep_deployment;
+  semgrep_deployment;
 ```
 
 ### List Semgrep deployment with name `your-deployment`
 
 ```sql
 select
-   *
+  *
 from
-   semgrep_deployment
+  semgrep_deployment
 where
-   name = 'you-deployment';
+  name = 'you-deployment';
 ```

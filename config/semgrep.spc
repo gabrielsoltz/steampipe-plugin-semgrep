@@ -3,7 +3,7 @@ connection "semgrep" {
 
   # The base URL of Semgrep. Required.
   # This can be set via the `SEMGREP_URL` environment variable.
-  base_url = "https://semgrep.dev/api/v1"
+  # base_url = "https://semgrep.dev/api/v1"
 
   # The access token required for API calls. Required.
   # This can also be set via the `SEMGREP_TOKEN` environment variable.
