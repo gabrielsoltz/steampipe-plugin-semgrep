@@ -62,8 +62,6 @@ where
 
 ### Group findings by severity for repository gabrielsoltz/steampipe-plugin-semgrep
 
-````sql
-
 ```sql
 select
   count(*) as findings,
@@ -75,4 +73,4 @@ where
   and repository ->> 'name' = 'gabrielsoltz/steampipe-plugin-semgrep'
 group by
   severity;
-````
+```
