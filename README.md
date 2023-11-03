@@ -1,3 +1,5 @@
+![image](https://hub.steampipe.io/images/plugins/gabrielsoltz/semgrep-social-graphic.png)
+
 # Semgrep Plugin for Steampipe
 
 Use SQL to query your security findings from [Semgrep](https://semgrep.dev/)
@@ -23,7 +25,7 @@ connection "semgrep" {
 
   # The base URL of Semgrep. Required.
   # This can be set via the `SEMGREP_URL` environment variable.
-  base_url = "https://semgrep.dev/api/v1"
+  # base_url = "https://semgrep.dev/api/v1"
 
   # The access token required for API calls. Required.
   # This can also be set via the `SEMGREP_TOKEN` environment variable.
@@ -109,4 +111,4 @@ Please see the [contribution guidelines](https://github.com/turbot/steampipe/blo
 `help wanted` issues:
 
 - [Steampipe](https://github.com/turbot/steampipe/labels/help%20wanted)
-- [semgrep Plugin](https://github.com/gabrielsoltz/steampipe-plugin-semgrep/labels/help%20wanted)
+- [Semgrep Plugin](https://github.com/gabrielsoltz/steampipe-plugin-semgrep/labels/help%20wanted)
