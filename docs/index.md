@@ -2,7 +2,7 @@
 organization: gabrielsoltz
 category: ["security"]
 icon_url: "/images/plugins/gabrielsoltz/semgrep.svg"
-brand_color: "#0095E5"
+brand_color: "#13BF95"
 display_name: "Semgrep"
 short_name: "semgrep"
 description: "Steampipe plugin to query deployments, findings, and projects from Semgrep."

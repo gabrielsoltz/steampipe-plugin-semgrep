@@ -3,6 +3,6 @@
 _What's new?_
 
 - New tables added
-  - [semgrep_deployment](https://github.com/gabrielsoltz/steampipe-plugin-semgrep/blob/main/semgrep/table_semgrep_deployment.go)
-  - [semgrep_finding](https://github.com/gabrielsoltz/steampipe-plugin-semgrep/blob/main/semgrep/table_semgrep_finding.go)
-  - [semgrep_project](https://github.com/gabrielsoltz/steampipe-plugin-semgrep/blob/main/semgrep/table_semgrep_project.go)
+  - [semgrep_deployment](https://hub.steampipe.io/plugins/gabrielsoltz/semgrep/table_semgrep_deployment.go)
+  - [semgrep_finding](https://hub.steampipe.io/plugins/gabrielsoltz/semgrep/table_semgrep_finding.go)
+  - [semgrep_project](https://hub.steampipe.io/plugins/gabrielsoltz/semgrep/table_semgrep_project.go)
