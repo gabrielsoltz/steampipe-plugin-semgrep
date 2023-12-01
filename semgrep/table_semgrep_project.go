@@ -16,8 +16,11 @@ func tableProject(_ context.Context) *plugin.Table {
 		Name:        "semgrep_project",
 		Description: "Table for querying Semgrep projects, containing project-specific information and configurations.",
 		List: &plugin.ListConfig{
-			Hydrate:    listProjects,
-			KeyColumns: plugin.SingleColumn("deployment_slug"),
+			ParentHydrate: listDeployments,
+			Hydrate:       listProjects,
+			KeyColumns: []*plugin.KeyColumn{
+				{Name: "deployment_slug", Require: plugin.Optional},
+			},
 		},
 		Columns: []*plugin.Column{
 			{Name: "id", Type: proto.ColumnType_STRING, Description: "Unique ID of this project."},
@@ -32,11 +35,14 @@ func tableProject(_ context.Context) *plugin.Table {
 
 //// LIST FUNCTION
 
-func listProjects(ctx context.Context, d *plugin.QueryData, _ *plugin.HydrateData) (interface{}, error) {
+func listProjects(ctx context.Context, d *plugin.QueryData, h *plugin.HydrateData) (interface{}, error) {
 
-	deployment_slug := d.EqualsQualString("deployment_slug")
+	deployment := h.Item.(Deployment)
+	if (d.EqualsQualString("deployment_slug") != "") && d.EqualsQualString("deployment_slug") != deployment.Slug {
+		return nil, nil
+	}
 
-	endpoint := "/deployments/" + deployment_slug + "/projects"
+	endpoint := "/deployments/" + deployment.Slug + "/projects"
 
 	paginatedResponse, err := paginatedResponse(ctx, d, endpoint)
 

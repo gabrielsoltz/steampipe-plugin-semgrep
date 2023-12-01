@@ -16,8 +16,11 @@ func tableFinding(_ context.Context) *plugin.Table {
 		Name:        "semgrep_finding",
 		Description: "Table for querying Semgrep findings data, including issues and metadata.",
 		List: &plugin.ListConfig{
-			Hydrate:    listFindings,
-			KeyColumns: plugin.SingleColumn("deployment_slug"),
+			ParentHydrate: listDeployments,
+			Hydrate:       listFindings,
+			KeyColumns: []*plugin.KeyColumn{
+				{Name: "deployment_slug", Require: plugin.Optional},
+			},
 		},
 		Columns: []*plugin.Column{
 			{Name: "id", Type: proto.ColumnType_STRING, Description: "Unique ID of this finding."},
@@ -46,11 +49,14 @@ func tableFinding(_ context.Context) *plugin.Table {
 
 //// LIST FUNCTION
 
-func listFindings(ctx context.Context, d *plugin.QueryData, _ *plugin.HydrateData) (interface{}, error) {
+func listFindings(ctx context.Context, d *plugin.QueryData, h *plugin.HydrateData) (interface{}, error) {
 
-	deployment_slug := d.EqualsQualString("deployment_slug")
+	deployment := h.Item.(Deployment)
+	if (d.EqualsQualString("deployment_slug") != "") && d.EqualsQualString("deployment_slug") != deployment.Slug {
+		return nil, nil
+	}
 
-	endpoint := "/deployments/" + deployment_slug + "/findings"
+	endpoint := "/deployments/" + deployment.Slug + "/findings"
 
 	paginatedResponse, err := paginatedResponse(ctx, d, endpoint)
 
