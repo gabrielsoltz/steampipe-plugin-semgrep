@@ -6,7 +6,6 @@ import (
 
 	"github.com/turbot/steampipe-plugin-sdk/v5/grpc/proto"
 	"github.com/turbot/steampipe-plugin-sdk/v5/plugin"
-	"github.com/turbot/steampipe-plugin-sdk/v5/plugin/transform"
 )
 
 //// TABLE DEFINITION
@@ -16,8 +15,11 @@ func tableFinding(_ context.Context) *plugin.Table {
 		Name:        "semgrep_finding",
 		Description: "Table for querying Semgrep findings data, including issues and metadata.",
 		List: &plugin.ListConfig{
-			Hydrate:    listFindings,
-			KeyColumns: plugin.SingleColumn("deployment_slug"),
+			ParentHydrate: listDeployments,
+			Hydrate:       listFindings,
+			KeyColumns: []*plugin.KeyColumn{
+				{Name: "deployment_slug", Require: plugin.Optional},
+			},
 		},
 		Columns: []*plugin.Column{
 			{Name: "id", Type: proto.ColumnType_STRING, Description: "Unique ID of this finding."},
@@ -39,18 +41,21 @@ func tableFinding(_ context.Context) *plugin.Table {
 			{Name: "triaged_at", Type: proto.ColumnType_TIMESTAMP, Description: "Triaged at."},
 			{Name: "triage_comment", Type: proto.ColumnType_STRING, Description: "Triage comment."},
 			{Name: "state_updated_at", Type: proto.ColumnType_TIMESTAMP, Description: "When this issues' state was last updated."},
-			{Name: "deployment_slug", Type: proto.ColumnType_STRING, Transform: transform.FromQual("deployment_slug"), Description: "Sanitized machine-readable name of the deployment."},
+			{Name: "deployment_slug", Type: proto.ColumnType_STRING, Description: "Sanitized machine-readable name of the deployment."},
 		},
 	}
 }
 
 //// LIST FUNCTION
 
-func listFindings(ctx context.Context, d *plugin.QueryData, _ *plugin.HydrateData) (interface{}, error) {
+func listFindings(ctx context.Context, d *plugin.QueryData, h *plugin.HydrateData) (interface{}, error) {
 
-	deployment_slug := d.EqualsQualString("deployment_slug")
+	deployment := h.Item.(Deployment)
+	if (d.EqualsQualString("deployment_slug") != "") && d.EqualsQualString("deployment_slug") != deployment.Slug {
+		return nil, nil
+	}
 
-	endpoint := "/deployments/" + deployment_slug + "/findings"
+	endpoint := "/deployments/" + deployment.Slug + "/findings"
 
 	paginatedResponse, err := paginatedResponse(ctx, d, endpoint)
 
@@ -67,6 +72,7 @@ func listFindings(ctx context.Context, d *plugin.QueryData, _ *plugin.HydrateDat
 		}
 
 		for _, finding := range response.Findings {
+			finding.DeploymentSlug = deployment.Slug
 			d.StreamListItem(ctx, finding)
 		}
 	}
@@ -96,6 +102,7 @@ type Finding struct {
 	TriagedAt       string     `json:"triaged_at"`
 	TriageComment   string     `json:"triage_comment"`
 	StateUpdatedAt  string     `json:"state_updated_at"`
+	DeploymentSlug  string     `json:"-"`
 }
 
 type Repository struct {

@@ -6,7 +6,6 @@ import (
 
 	"github.com/turbot/steampipe-plugin-sdk/v5/grpc/proto"
 	"github.com/turbot/steampipe-plugin-sdk/v5/plugin"
-	"github.com/turbot/steampipe-plugin-sdk/v5/plugin/transform"
 )
 
 //// TABLE DEFINITION
@@ -16,8 +15,11 @@ func tableProject(_ context.Context) *plugin.Table {
 		Name:        "semgrep_project",
 		Description: "Table for querying Semgrep projects, containing project-specific information and configurations.",
 		List: &plugin.ListConfig{
-			Hydrate:    listProjects,
-			KeyColumns: plugin.SingleColumn("deployment_slug"),
+			ParentHydrate: listDeployments,
+			Hydrate:       listProjects,
+			KeyColumns: []*plugin.KeyColumn{
+				{Name: "deployment_slug", Require: plugin.Optional},
+			},
 		},
 		Columns: []*plugin.Column{
 			{Name: "id", Type: proto.ColumnType_STRING, Description: "Unique ID of this project."},
@@ -25,18 +27,21 @@ func tableProject(_ context.Context) *plugin.Table {
 			{Name: "url", Type: proto.ColumnType_STRING, Description: "URL of this project."},
 			{Name: "latest_scan", Type: proto.ColumnType_TIMESTAMP, Description: "Latest scan date of this project."},
 			{Name: "tags", Type: proto.ColumnType_JSON, Description: "Tags of this project."},
-			{Name: "deployment_slug", Type: proto.ColumnType_STRING, Transform: transform.FromQual("deployment_slug"), Description: "Sanitized machine-readable name of the deployment."},
+			{Name: "deployment_slug", Type: proto.ColumnType_STRING, Description: "Sanitized machine-readable name of the deployment."},
 		},
 	}
 }
 
 //// LIST FUNCTION
 
-func listProjects(ctx context.Context, d *plugin.QueryData, _ *plugin.HydrateData) (interface{}, error) {
+func listProjects(ctx context.Context, d *plugin.QueryData, h *plugin.HydrateData) (interface{}, error) {
 
-	deployment_slug := d.EqualsQualString("deployment_slug")
+	deployment := h.Item.(Deployment)
+	if (d.EqualsQualString("deployment_slug") != "") && d.EqualsQualString("deployment_slug") != deployment.Slug {
+		return nil, nil
+	}
 
-	endpoint := "/deployments/" + deployment_slug + "/projects"
+	endpoint := "/deployments/" + deployment.Slug + "/projects"
 
 	paginatedResponse, err := paginatedResponse(ctx, d, endpoint)
 
@@ -53,6 +58,7 @@ func listProjects(ctx context.Context, d *plugin.QueryData, _ *plugin.HydrateDat
 		}
 
 		for _, project := range response.Projects {
+			project.DeploymentSlug = deployment.Slug
 			d.StreamListItem(ctx, project)
 		}
 	}
@@ -63,11 +69,12 @@ func listProjects(ctx context.Context, d *plugin.QueryData, _ *plugin.HydrateDat
 //// Custom Structs
 
 type Project struct {
-	ID         int      `json:"id"`
-	Name       string   `json:"name"`
-	Url        string   `json:"url"`
-	LatestScan string   `json:"latest_scan_at"`
-	Tags       []string `json:"tags"`
+	ID             int      `json:"id"`
+	Name           string   `json:"name"`
+	Url            string   `json:"url"`
+	LatestScan     string   `json:"latest_scan_at"`
+	Tags           []string `json:"tags"`
+	DeploymentSlug string   `json:"-"`
 }
 
 type ProjectsResponse struct {
