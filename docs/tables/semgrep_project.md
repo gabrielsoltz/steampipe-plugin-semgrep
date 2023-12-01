@@ -12,6 +12,17 @@ select
   name,
   latest_scan
 from
+  semgrep_project;
+```
+
+### List all Semgrep projects for a specific deployment
+
+```sql
+select
+  id,
+  name,
+  latest_scan
+from
   semgrep_project
 where
   deployment_slug = 'my-deployment';
@@ -25,8 +36,7 @@ select
 from
   semgrep_project
 where
-  tags ? 'security'
-  and deployment_slug = 'my-deployment'
+  tags ? 'security';
 ```
 
 ### List all Semgrep projects with a scan in the last 7 days
@@ -37,6 +47,5 @@ select
 from
   semgrep_project
 where
-  latest_scan > now() - interval '7 days'
-  and deployment_slug = 'my-deployment'
+  latest_scan > now() - interval '7 days';
 ```

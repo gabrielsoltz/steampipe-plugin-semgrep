@@ -16,6 +16,21 @@ select
   confidence,
   rule_name
 from
+  semgrep_finding;
+```
+
+### List all Semgrep findings for a specific deployment
+
+```sql
+select
+  id,
+  state,
+  repository,
+  triage_state,
+  severity,
+  confidence,
+  rule_name
+from
   semgrep_finding
 where
   deployment_slug = 'my-deployment';
@@ -35,8 +50,7 @@ select
 from
   semgrep_finding
 where
-  deployment_slug = 'my-deployment'
-  and severity = 'high'
+  severity = 'high'
   and triage_state = 'untriaged';
 ```
 
@@ -54,8 +68,7 @@ select
 from
   semgrep_finding
 where
-  deployment_slug = 'my-deployment'
-  and severity = 'high'
+  severity = 'high'
   and triage_state = 'untriaged'
   and repository ->> 'name' = 'gabrielsoltz/steampipe-plugin-semgrep';
 ```
@@ -69,8 +82,7 @@ select
 from
   semgrep_finding
 where
-  deployment_slug = 'my-deployment'
-  and repository ->> 'name' = 'gabrielsoltz/steampipe-plugin-semgrep'
+  repository ->> 'name' = 'gabrielsoltz/steampipe-plugin-semgrep'
 group by
   severity;
 ```
