@@ -6,7 +6,6 @@ import (
 
 	"github.com/turbot/steampipe-plugin-sdk/v5/grpc/proto"
 	"github.com/turbot/steampipe-plugin-sdk/v5/plugin"
-	"github.com/turbot/steampipe-plugin-sdk/v5/plugin/transform"
 )
 
 //// TABLE DEFINITION
@@ -42,7 +41,7 @@ func tableFinding(_ context.Context) *plugin.Table {
 			{Name: "triaged_at", Type: proto.ColumnType_TIMESTAMP, Description: "Triaged at."},
 			{Name: "triage_comment", Type: proto.ColumnType_STRING, Description: "Triage comment."},
 			{Name: "state_updated_at", Type: proto.ColumnType_TIMESTAMP, Description: "When this issues' state was last updated."},
-			{Name: "deployment_slug", Type: proto.ColumnType_STRING, Transform: transform.FromQual("deployment_slug"), Description: "Sanitized machine-readable name of the deployment."},
+			{Name: "deployment_slug", Type: proto.ColumnType_STRING, Description: "Sanitized machine-readable name of the deployment."},
 		},
 	}
 }
@@ -73,6 +72,7 @@ func listFindings(ctx context.Context, d *plugin.QueryData, h *plugin.HydrateDat
 		}
 
 		for _, finding := range response.Findings {
+			finding.DeploymentSlug = deployment.Slug
 			d.StreamListItem(ctx, finding)
 		}
 	}
@@ -102,6 +102,7 @@ type Finding struct {
 	TriagedAt       string     `json:"triaged_at"`
 	TriageComment   string     `json:"triage_comment"`
 	StateUpdatedAt  string     `json:"state_updated_at"`
+	DeploymentSlug  string     `json:"-"`
 }
 
 type Repository struct {

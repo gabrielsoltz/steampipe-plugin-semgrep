@@ -6,7 +6,6 @@ import (
 
 	"github.com/turbot/steampipe-plugin-sdk/v5/grpc/proto"
 	"github.com/turbot/steampipe-plugin-sdk/v5/plugin"
-	"github.com/turbot/steampipe-plugin-sdk/v5/plugin/transform"
 )
 
 //// TABLE DEFINITION
@@ -28,7 +27,7 @@ func tableProject(_ context.Context) *plugin.Table {
 			{Name: "url", Type: proto.ColumnType_STRING, Description: "URL of this project."},
 			{Name: "latest_scan", Type: proto.ColumnType_TIMESTAMP, Description: "Latest scan date of this project."},
 			{Name: "tags", Type: proto.ColumnType_JSON, Description: "Tags of this project."},
-			{Name: "deployment_slug", Type: proto.ColumnType_STRING, Transform: transform.FromQual("deployment_slug"), Description: "Sanitized machine-readable name of the deployment."},
+			{Name: "deployment_slug", Type: proto.ColumnType_STRING, Description: "Sanitized machine-readable name of the deployment."},
 		},
 	}
 }
@@ -59,6 +58,7 @@ func listProjects(ctx context.Context, d *plugin.QueryData, h *plugin.HydrateDat
 		}
 
 		for _, project := range response.Projects {
+			project.DeploymentSlug = deployment.Slug
 			d.StreamListItem(ctx, project)
 		}
 	}
@@ -69,11 +69,12 @@ func listProjects(ctx context.Context, d *plugin.QueryData, h *plugin.HydrateDat
 //// Custom Structs
 
 type Project struct {
-	ID         int      `json:"id"`
-	Name       string   `json:"name"`
-	Url        string   `json:"url"`
-	LatestScan string   `json:"latest_scan_at"`
-	Tags       []string `json:"tags"`
+	ID             int      `json:"id"`
+	Name           string   `json:"name"`
+	Url            string   `json:"url"`
+	LatestScan     string   `json:"latest_scan_at"`
+	Tags           []string `json:"tags"`
+	DeploymentSlug string   `json:"-"`
 }
 
 type ProjectsResponse struct {
