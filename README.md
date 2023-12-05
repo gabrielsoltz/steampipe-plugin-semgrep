@@ -52,8 +52,7 @@ select
 from
   semgrep_finding
 where
-  deployment_slug = 'my-company'
-  and state = 'unresolved';
+  state = 'unresolved';
 ```
 
 ```
