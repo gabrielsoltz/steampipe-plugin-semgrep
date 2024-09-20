@@ -31,7 +31,8 @@ func tableDeployment(_ context.Context) *plugin.Table {
 func listDeployments(ctx context.Context, d *plugin.QueryData, _ *plugin.HydrateData) (interface{}, error) {
 	endpoint := "/deployments"
 
-	jsonString, err := connect(ctx, d, endpoint, 0, 100)
+	emptyParams := map[string]string{}
+	jsonString, err := connect(ctx, d, endpoint, 0, 100, emptyParams)
 	if err != nil {
 		plugin.Logger(ctx).Error("semgrep_deployment.listDeployments", "connection_error", err)
 		return nil, err

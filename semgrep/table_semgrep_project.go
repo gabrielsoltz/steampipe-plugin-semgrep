@@ -23,10 +23,11 @@ func tableProject(_ context.Context) *plugin.Table {
 		},
 		Columns: []*plugin.Column{
 			{Name: "id", Type: proto.ColumnType_STRING, Description: "Unique ID of this project."},
-			{Name: "name", Type: proto.ColumnType_STRING, Description: "Name of this project."},
-			{Name: "url", Type: proto.ColumnType_STRING, Description: "URL of this project."},
-			{Name: "latest_scan", Type: proto.ColumnType_TIMESTAMP, Description: "Latest scan date of this project."},
-			{Name: "tags", Type: proto.ColumnType_JSON, Description: "Tags of this project."},
+			{Name: "name", Type: proto.ColumnType_STRING, Description: "Name of the project."},
+			{Name: "url", Type: proto.ColumnType_STRING, Description: "URL of the project, if there is one."},
+			{Name: "tags", Type: proto.ColumnType_JSON, Description: "Tags associated to this project."},
+			{Name: "created_at", Type: proto.ColumnType_TIMESTAMP, Description: "Time when this project was created."},
+			{Name: "latest_scan_at", Type: proto.ColumnType_TIMESTAMP, Description: "Time of latest scan, if there is one."},
 			{Name: "deployment_slug", Type: proto.ColumnType_STRING, Description: "Sanitized machine-readable name of the deployment."},
 		},
 	}
@@ -43,7 +44,8 @@ func listProjects(ctx context.Context, d *plugin.QueryData, h *plugin.HydrateDat
 
 	endpoint := "/deployments/" + deployment.Slug + "/projects"
 
-	paginatedResponse, err := paginatedResponse(ctx, d, endpoint)
+	emptyParams := map[string]string{}
+	paginatedResponse, err := paginatedResponse(ctx, d, endpoint, emptyParams)
 
 	if err != nil {
 		plugin.Logger(ctx).Error("semgrep_project.listProjects", "connection_error", err)
@@ -72,8 +74,9 @@ type Project struct {
 	ID             int      `json:"id"`
 	Name           string   `json:"name"`
 	Url            string   `json:"url"`
-	LatestScan     string   `json:"latest_scan_at"`
 	Tags           []string `json:"tags"`
+	CreatedAt      string   `json:"created_at"`
+	LatestScan     string   `json:"latest_scan_at"`
 	DeploymentSlug string   `json:"-"`
 }
 
