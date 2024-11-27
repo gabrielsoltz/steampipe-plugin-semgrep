@@ -13,7 +13,6 @@ select
   repository,
   triage_state,
   severity,
-  confidence,
   rule_name
 from
   semgrep_finding;
@@ -28,7 +27,6 @@ select
   repository,
   triage_state,
   severity,
-  confidence,
   rule_name
 from
   semgrep_finding
@@ -45,7 +43,6 @@ select
   repository,
   triage_state,
   severity,
-  confidence,
   rule_name
 from
   semgrep_finding
@@ -63,7 +60,6 @@ select
   repository,
   triage_state,
   severity,
-  confidence,
   rule_name
 from
   semgrep_finding
