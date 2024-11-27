@@ -1,3 +1,12 @@
+## v0.0.4 [2024-11-27]
+
+## What's Changed
+
+- New Table: semgrep_sca_finding by @gabrielsoltz in https://github.com/gabrielsoltz/steampipe-plugin-semgrep/pull/38
+- Bump github.com/turbot/steampipe-plugin-sdk/v5 from 5.10.4 to 5.11.0 by @dependabot in https://github.com/gabrielsoltz/steampipe-plugin-semgrep/pull/37
+
+**Full Changelog**: https://github.com/gabrielsoltz/steampipe-plugin-semgrep/compare/v0.0.3...v.0.0.4
+
 ## v0.0.3 [2024-09-20]
 
 ## What's Changed
