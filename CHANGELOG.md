@@ -1,11 +1,11 @@
 ## v0.0.5 [2025-04-25]
 
 ## What's Changed
-* Bump github.com/golang/glog from 1.2.1 to 1.2.4 by @dependabot in https://github.com/gabrielsoltz/steampipe-plugin-semgrep/pull/41
-* Bump github.com/containerd/containerd from 1.7.18 to 1.7.27 by @dependabot in https://github.com/gabrielsoltz/steampipe-plugin-semgrep/pull/45
-* Bump github.com/turbot/steampipe-plugin-sdk/v5 from 5.11.0 to 5.11.5 by @dependabot in https://github.com/gabrielsoltz/steampipe-plugin-semgrep/pull/47
-* Bump golang.org/x/net from 0.26.0 to 0.38.0 by @dependabot in https://github.com/gabrielsoltz/steampipe-plugin-semgrep/pull/49
 
+- Bump github.com/golang/glog from 1.2.1 to 1.2.4 by @dependabot in https://github.com/gabrielsoltz/steampipe-plugin-semgrep/pull/41
+- Bump github.com/containerd/containerd from 1.7.18 to 1.7.27 by @dependabot in https://github.com/gabrielsoltz/steampipe-plugin-semgrep/pull/45
+- Bump github.com/turbot/steampipe-plugin-sdk/v5 from 5.11.0 to 5.11.5 by @dependabot in https://github.com/gabrielsoltz/steampipe-plugin-semgrep/pull/47
+- Bump golang.org/x/net from 0.26.0 to 0.38.0 by @dependabot in https://github.com/gabrielsoltz/steampipe-plugin-semgrep/pull/49
 
 **Full Changelog**: https://github.com/gabrielsoltz/steampipe-plugin-semgrep/compare/v0.0.4...v0.0.5
 
