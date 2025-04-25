@@ -1,6 +1,7 @@
 module github.com/gabrielsoltz/steampipe-plugin-semgrep
 
-go 1.22.4
+go 1.23.1
+
 toolchain go1.24.1
 
 require github.com/turbot/steampipe-plugin-sdk/v5 v5.11.5
