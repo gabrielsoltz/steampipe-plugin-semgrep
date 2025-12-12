@@ -1,3 +1,31 @@
+## v0.0.8 [2025-12-09]
+
+## What's Changed
+
+- Bump golang.org/x/crypto from 0.36.0 to 0.45.0 by @dependabot[bot] in https://github.com/gabrielsoltz/steampipe-plugin-semgrep/pull/59
+- Bump github.com/turbot/steampipe-plugin-sdk/v5 from 5.13.0 to 5.13.1 by @dependabot[bot] in https://github.com/gabrielsoltz/steampipe-plugin-semgrep/pull/58
+
+**Full Changelog**: https://github.com/gabrielsoltz/steampipe-plugin-semgrep/compare/v0.0.7...v.0.0.8
+
+## v0.0.7 [2025-08-29]
+
+## What's Changed
+
+- Bump github.com/ulikunitz/xz from 0.5.10 to 0.5.14 by @dependabot[bot] in https://github.com/gabrielsoltz/steampipe-plugin-semgrep/pull/57
+- Bump github.com/hashicorp/go-getter from 1.7.5 to 1.7.9 by @dependabot[bot] in https://github.com/gabrielsoltz/steampipe-plugin-semgrep/pull/56
+
+**Full Changelog**: https://github.com/gabrielsoltz/steampipe-plugin-semgrep/compare/v0.0.6...v0.0.7
+
+## v0.0.6 [2025-07-28]
+
+## What's Changed
+
+- Bump github.com/turbot/steampipe-plugin-sdk/v5 from 5.11.5 to 5.12.0 by @dependabot[bot] in https://github.com/gabrielsoltz/steampipe-plugin-semgrep/pull/53
+- Bump golang.org/x/oauth2 from 0.21.0 to 0.27.0 by @dependabot[bot] in https://github.com/gabrielsoltz/steampipe-plugin-semgrep/pull/54
+- Bump github.com/turbot/steampipe-plugin-sdk/v5 from 5.12.0 to 5.13.0 by @dependabot[bot] in https://github.com/gabrielsoltz/steampipe-plugin-semgrep/pull/55
+
+**Full Changelog**: https://github.com/gabrielsoltz/steampipe-plugin-semgrep/compare/v0.0.5...v0.0.6
+
 ## v0.0.5 [2025-04-25]
 
 ## What's Changed
